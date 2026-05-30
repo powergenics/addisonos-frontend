@@ -1779,9 +1779,35 @@ function buildSteps() {
     <div id="intro-error" style="color:#e2c47a;font-family:var(--serif);font-size:0.9rem;font-style:italic;text-align:center;min-height:1.2rem;margin-bottom:0.5rem;"></div>
     <div class="step-nav">
       <button class="btn-back" disabled>← Back</button>
-      <button class="btn-next" onclick="startAssessment()">Begin Assessment →</button>
+      <button class="btn-next" id="btn-send-code" onclick="startAssessment()">Send Verification Code →</button>
     </div>`;
   wrap.appendChild(intro);
+
+  // Verification step 0b
+  const verifyStep = document.createElement('div');
+  verifyStep.className = 'step intro-step';
+  verifyStep.dataset.step = '0b';
+  verifyStep.innerHTML = `
+    <span class="step-eyebrow">Verify Your Email</span>
+    <h2 class="step-headline">Check your inbox.</h2>
+    <p class="step-sub">We sent a 6-digit code to <strong id="verify-email-display" style="color:var(--gold);font-style:normal;"></strong>. Enter it below to begin.</p>
+    <div style="max-width:280px;margin:0 auto 2rem;">
+      <div class="field-group">
+        <label class="field-label">Verification Code</label>
+        <input class="field-input" type="text" id="f-code" placeholder="000000" maxlength="6"
+          style="font-size:1.6rem;letter-spacing:0.4em;text-align:center;"
+          oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+      </div>
+    </div>
+    <div id="verify-error" style="color:#e2c47a;font-family:var(--serif);font-size:0.9rem;font-style:italic;text-align:center;min-height:1.2rem;margin-bottom:0.5rem;"></div>
+    <div class="step-nav">
+      <button class="btn-back" onclick="showStep(0)">← Back</button>
+      <button class="btn-next" id="btn-verify" onclick="verifyCode()">Verify &amp; Begin →</button>
+    </div>
+    <p style="text-align:center;margin-top:1.5rem;">
+      <button onclick="resendCode()" style="background:none;border:none;color:var(--gold-dim);font-family:var(--serif);font-size:0.85rem;font-style:italic;cursor:pointer;text-decoration:underline;">Resend code</button>
+    </p>`;
+  wrap.appendChild(verifyStep);
 
   // Questions
   QUESTIONS.forEach((q, i) => {
@@ -1838,15 +1864,82 @@ function updateProgress() {
   document.getElementById('progress-text').textContent = label;
 }
 
-function startAssessment() {
+async function startAssessment() {
   const first = document.getElementById('f-first').value.trim();
   const email = document.getElementById('f-email').value.trim();
+  const phone = document.getElementById('f-phone').value.trim();
   const err = document.getElementById('intro-error');
   err.textContent = '';
   if (!first || !email) { err.textContent = 'Please enter your first name and email to continue.'; return; }
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) { err.textContent = 'Please enter a valid email address.'; return; }
-  goNext();
+
+  const btn = document.getElementById('btn-send-code');
+  btn.disabled = true;
+  btn.textContent = 'Sending code...';
+
+  try {
+    const res = await fetch(`${API_URL}/api/send-code`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ firstName: first, lastName: '', email, phone })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to send code.');
+    document.getElementById('verify-email-display').textContent = email;
+    showStep('0b');
+  } catch(e) {
+    err.textContent = e.message;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Send Verification Code →';
+  }
+}
+
+async function verifyCode() {
+  const email = document.getElementById('f-email').value.trim();
+  const code = document.getElementById('f-code').value.trim();
+  const err = document.getElementById('verify-error');
+  err.textContent = '';
+  if (!code || code.length < 6) { err.textContent = 'Please enter the 6-digit code from your email.'; return; }
+
+  const btn = document.getElementById('btn-verify');
+  btn.disabled = true;
+  btn.textContent = 'Verifying...';
+
+  try {
+    const res = await fetch(`${API_URL}/api/verify-code`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, code })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Verification failed.');
+    showStep(1);
+  } catch(e) {
+    err.textContent = e.message;
+    btn.disabled = false;
+    btn.textContent = 'Verify & Begin →';
+  }
+}
+
+async function resendCode() {
+  const first = document.getElementById('f-first').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  const phone = document.getElementById('f-phone').value.trim();
+  const err = document.getElementById('verify-error');
+  err.textContent = 'Sending new code...';
+  try {
+    const res = await fetch(`${API_URL}/api/send-code`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ firstName: first, lastName: '', email, phone })
+    });
+    const data = await res.json();
+    err.textContent = res.ok ? 'New code sent. Check your inbox.' : (data.error || 'Failed to resend.');
+  } catch(e) {
+    err.textContent = 'Failed to resend. Please try again.';
+  }
 }
 
 function selectAnswer(qIndex, optIndex, btn) {
@@ -1927,7 +2020,7 @@ async function showResults() {
   document.getElementById('results').classList.add('active');
   document.getElementById('results').scrollTop = 0;
 
-  // Submit to API silently
+  // Submit to API — sends lead email to Thomas and results email to owner
   try {
     await fetch(`${API_URL}/api/submit-results`, {
       method: 'POST',
@@ -1940,8 +2033,13 @@ async function showResults() {
         personalScore: dimScores.people + dimScores.systems,
         financialScore: dimScores.finance,
         quadrant: tier === 'optimized' ? 'Q4' : tier === 'growing' ? 'Q2' : 'Q1',
-        situationalAnswers: [`Addison OS Assessment — Tier: ${td.name}`],
-        openText: `People: ${dimScores.people}/9 · Systems: ${dimScores.systems}/9 · Finance: ${dimScores.finance}/6`
+        situationalAnswers: [
+          `Addison OS Assessment`,
+          `Tier: ${td.name}`,
+          `People & Leadership: ${dimScores.people}/9`,
+          `Systems & Technology: ${dimScores.systems}/9`
+        ],
+        openText: `Finance & Growth: ${dimScores.finance}/6 | Overall: ${tier.toUpperCase()}`
       })
     });
   } catch(e) { console.warn('Submission failed silently:', e); }
