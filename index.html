@@ -1,0 +1,1953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Addison OS — Stop Running Your Business on Spreadsheets and Hope</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@300;400;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0f1e35;
+    --navy-mid: #1b2a4a;
+    --navy-light: #243558;
+    --gold: #c9a84c;
+    --gold-light: #e2c47a;
+    --gold-dim: #8a6f33;
+    --cream: #f8f4ee;
+    --cream-dark: #ede8df;
+    --white: #ffffff;
+    --gray-light: #d4cfc8;
+    --gray-mid: #8a8580;
+    --red: #c94c4c;
+    --green: #4c9c6a;
+    --text-dark: #1a1a1a;
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans: 'Josefin Sans', sans-serif;
+    --mono: 'DM Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--navy);
+    color: var(--cream);
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    background: linear-gradient(155deg, #0a1628 0%, var(--navy) 50%, #071020 100%);
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Grid background */
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  .hero-rule {
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent);
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.75rem 4rem;
+    position: relative;
+    z-index: 1;
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+  }
+
+  .logo {
+    display: flex;
+    align-items: baseline;
+    gap: 0;
+  }
+
+  .logo-addison {
+    font-family: var(--serif);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--cream);
+    letter-spacing: 0.06em;
+  }
+
+  .logo-os {
+    font-family: var(--mono);
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+    margin-left: 3px;
+  }
+
+  .nav-tag {
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gray-mid);
+    border: 1px solid rgba(201,168,76,0.25);
+    padding: 0.3rem 0.8rem;
+    border-radius: 2px;
+  }
+
+  .hero-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4rem 2rem 3rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 100px;
+    padding: 0.35rem 1rem;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.1s;
+  }
+
+  .badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    animation: pulse 2s ease infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .badge-text {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .hero-headline {
+    font-family: var(--serif);
+    font-size: clamp(2.4rem, 5.5vw, 5rem);
+    font-weight: 300;
+    line-height: 1.05;
+    color: var(--cream);
+    max-width: 860px;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.3s;
+  }
+
+  .hero-headline em {
+    font-style: italic;
+    color: var(--gold-light);
+  }
+
+  .hero-headline .strike {
+    position: relative;
+    color: var(--gray-mid);
+  }
+
+  .hero-headline .strike::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 55%;
+    width: 100%;
+    height: 2px;
+    background: var(--red);
+    transform: rotate(-1deg);
+  }
+
+  .hero-sub {
+    font-family: var(--serif);
+    font-size: clamp(1rem, 2vw, 1.35rem);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--gray-light);
+    max-width: 600px;
+    line-height: 1.75;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.5s;
+  }
+
+  .hero-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.7s;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--navy);
+    border: none;
+    padding: 1.1rem 3rem;
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(201,168,76,0.35);
+  }
+
+  .cta-meta {
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: var(--gray-mid);
+    text-transform: uppercase;
+  }
+
+  /* Pain indicators */
+  .hero-pain {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 2rem 4rem;
+    border-top: 1px solid rgba(201,168,76,0.08);
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards 0.9s;
+  }
+
+  .pain-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .pain-icon {
+    font-size: 0.8rem;
+    color: var(--red);
+  }
+
+  .pain-text {
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--gray-mid);
+    text-transform: uppercase;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── PROBLEM SECTION ── */
+  .problem-section {
+    background: var(--cream);
+    padding: 7rem 4rem;
+    color: var(--text-dark);
+  }
+
+  .problem-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .problem-headline {
+    font-family: var(--serif);
+    font-size: clamp(1.8rem, 3.5vw, 3rem);
+    font-weight: 300;
+    color: var(--navy);
+    line-height: 1.2;
+    max-width: 680px;
+    margin-bottom: 4rem;
+  }
+
+  .symptoms-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border: 1px solid #ddd;
+  }
+
+  .symptom {
+    padding: 2rem;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    position: relative;
+    transition: background 0.2s;
+  }
+
+  .symptom:hover { background: #faf8f5; }
+  .symptom:nth-child(3n) { border-right: none; }
+  .symptom:nth-child(n+4) { border-bottom: none; }
+
+  .symptom-number {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--gold-dim);
+    margin-bottom: 0.75rem;
+    display: block;
+    letter-spacing: 0.1em;
+  }
+
+  .symptom-title {
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: var(--navy);
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+
+  .symptom-desc {
+    font-size: 0.8rem;
+    color: #666;
+    line-height: 1.65;
+    font-family: var(--serif);
+    font-weight: 300;
+  }
+
+  /* ── SOLUTION SECTION ── */
+  .solution-section {
+    background: var(--navy-mid);
+    padding: 7rem 4rem;
+  }
+
+  .solution-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: start;
+  }
+
+  .solution-left {}
+
+  .solution-headline {
+    font-family: var(--serif);
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    font-weight: 300;
+    color: var(--cream);
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+  }
+
+  .solution-body {
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    font-weight: 300;
+    color: var(--gray-light);
+    line-height: 1.8;
+    margin-bottom: 2rem;
+  }
+
+  .solution-body strong {
+    color: var(--cream);
+    font-weight: 400;
+  }
+
+  .solution-zoho {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.2);
+    padding: 0.6rem 1rem;
+    border-radius: 2px;
+    margin-bottom: 2rem;
+  }
+
+  .zoho-badge-text {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .solution-right {}
+
+  .deliverables {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .deliverable {
+    display: flex;
+    gap: 1.25rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+    align-items: flex-start;
+  }
+
+  .deliverable:first-child { padding-top: 0; }
+  .deliverable:last-child { border-bottom: none; }
+
+  .deliverable-icon {
+    width: 36px;
+    height: 36px;
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 1rem;
+  }
+
+  .deliverable-content {}
+
+  .deliverable-title {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.3rem;
+  }
+
+  .deliverable-desc {
+    font-family: var(--serif);
+    font-size: 0.95rem;
+    font-weight: 300;
+    color: var(--gray-light);
+    line-height: 1.6;
+  }
+
+  /* ── VALUE SECTION ── */
+  .value-section {
+    background: var(--navy);
+    padding: 7rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .value-section::before {
+    content: 'OS';
+    position: absolute;
+    right: -2rem;
+    bottom: -4rem;
+    font-family: var(--serif);
+    font-size: 30rem;
+    font-weight: 600;
+    color: rgba(201,168,76,0.03);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .value-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .value-headline {
+    font-family: var(--serif);
+    font-size: clamp(1.8rem, 3.5vw, 3rem);
+    font-weight: 300;
+    color: var(--cream);
+    line-height: 1.2;
+    max-width: 700px;
+    margin-bottom: 4rem;
+  }
+
+  .value-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: rgba(201,168,76,0.1);
+  }
+
+  .value-card {
+    background: var(--navy);
+    padding: 2.5rem 2rem;
+    transition: background 0.2s;
+  }
+
+  .value-card:hover { background: var(--navy-mid); }
+
+  .value-before {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--red);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .value-after {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--green);
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .value-arrow {
+    color: var(--gold-dim);
+    font-size: 0.8rem;
+    margin: 0.25rem 0;
+    display: block;
+  }
+
+  .value-dim {
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-top: 1rem;
+    border-top: 1px solid rgba(201,168,76,0.1);
+    padding-top: 0.75rem;
+  }
+
+  /* ── CREDIBILITY ── */
+  .cred-section {
+    background: var(--cream);
+    padding: 7rem 4rem;
+    color: var(--text-dark);
+  }
+
+  .cred-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: center;
+  }
+
+  .cred-name {
+    font-family: var(--serif);
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    font-weight: 300;
+    color: var(--navy);
+    margin-bottom: 0.5rem;
+  }
+
+  .cred-title {
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 2rem;
+  }
+
+  .cred-story {
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    font-weight: 300;
+    line-height: 1.8;
+    color: #444;
+    margin-bottom: 1.5rem;
+  }
+
+  .cred-story strong { color: var(--navy); font-weight: 400; }
+
+  .cred-credentials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .cred-badge {
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: 1px solid rgba(27,42,74,0.25);
+    color: var(--navy-mid);
+    padding: 0.3rem 0.75rem;
+    border-radius: 2px;
+  }
+
+  .cred-right {}
+
+  .process-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .process-step {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid #eee;
+    align-items: flex-start;
+  }
+
+  .process-step:last-child { border-bottom: none; }
+
+  .step-num {
+    font-family: var(--mono);
+    font-size: 1.8rem;
+    font-weight: 300;
+    color: rgba(27,42,74,0.12);
+    line-height: 1;
+    min-width: 40px;
+  }
+
+  .step-content {}
+
+  .step-title {
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 0.3rem;
+  }
+
+  .step-desc {
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-weight: 300;
+    color: #444;
+    line-height: 1.6;
+  }
+
+  /* ── BRIDGE CTA ── */
+  .bridge-section {
+    background: linear-gradient(135deg, var(--gold-dim), var(--gold), var(--gold-light));
+    padding: 5rem 4rem;
+    text-align: center;
+  }
+
+  .bridge-inner { max-width: 680px; margin: 0 auto; }
+
+  .bridge-headline {
+    font-family: var(--serif);
+    font-size: clamp(1.8rem, 3.5vw, 3rem);
+    font-weight: 300;
+    color: var(--navy);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .bridge-sub {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--navy-mid);
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+  }
+
+  .btn-dark {
+    background: var(--navy);
+    color: var(--gold);
+    border: none;
+    padding: 1.1rem 3rem;
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  }
+
+  .btn-dark:hover {
+    background: var(--navy-light);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+  }
+
+  /* ── ASSESSMENT OVERLAY ── */
+  #assessment {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: var(--navy);
+    overflow-y: auto;
+  }
+
+  #assessment.active { display: block; }
+
+  .assessment-wrap { min-height: 100vh; display: flex; flex-direction: column; }
+
+  .assessment-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 3rem;
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+    position: sticky;
+    top: 0;
+    background: var(--navy);
+    z-index: 10;
+  }
+
+  .assessment-logo {
+    display: flex;
+    align-items: baseline;
+    gap: 0;
+  }
+
+  .al-addison {
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--cream);
+  }
+
+  .al-os {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    color: var(--gold);
+    margin-left: 2px;
+  }
+
+  .progress-wrap {
+    flex: 1;
+    max-width: 400px;
+    margin: 0 2rem;
+  }
+
+  .progress-label {
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gray-mid);
+    margin-bottom: 0.4rem;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .progress-bar {
+    height: 2px;
+    background: rgba(201,168,76,0.15);
+    border-radius: 1px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    transition: width 0.5s ease;
+    border-radius: 1px;
+  }
+
+  .btn-close {
+    background: none;
+    border: 1px solid rgba(201,168,76,0.2);
+    color: var(--gray-mid);
+    font-family: var(--sans);
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.4rem 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-close:hover { border-color: var(--gold); color: var(--gold); }
+
+  .step {
+    display: none;
+    padding: 4rem 3rem;
+    max-width: 760px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .step.active { display: block; animation: fadeUp 0.4s ease; }
+
+  .intro-step { text-align: center; padding: 5rem 3rem; }
+
+  .step-eyebrow {
+    font-size: 0.58rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    display: block;
+  }
+
+  .step-headline {
+    font-family: var(--serif);
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 300;
+    color: var(--cream);
+    line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+
+  .step-sub {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--gray-light);
+    line-height: 1.7;
+    max-width: 540px;
+    margin: 0 auto 2.5rem;
+  }
+
+  .contact-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+    max-width: 540px;
+    margin: 0 auto 2rem;
+  }
+
+  .field-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  .field-group.full { grid-column: 1 / -1; }
+
+  .field-label {
+    font-size: 0.58rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gray-mid);
+  }
+
+  .field-label .optional { color: var(--gold-dim); font-style: italic; text-transform: none; letter-spacing: 0; }
+
+  .field-input {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(201,168,76,0.2);
+    color: var(--cream);
+    font-family: var(--sans);
+    font-size: 0.85rem;
+    padding: 0.75rem 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+
+  .field-input:focus { border-color: var(--gold); background: rgba(201,168,76,0.04); }
+  .field-input::placeholder { color: rgba(201,168,76,0.22); }
+
+  .q-category {
+    font-size: 0.58rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .q-number {
+    font-family: var(--serif);
+    font-size: 4rem;
+    font-weight: 300;
+    color: rgba(201,168,76,0.1);
+    line-height: 1;
+    margin-bottom: -1rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .q-text {
+    font-family: var(--serif);
+    font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+    font-weight: 300;
+    color: var(--cream);
+    line-height: 1.45;
+    margin-bottom: 2.5rem;
+  }
+
+  .options-list { display: flex; flex-direction: column; gap: 0.75rem; }
+
+  .option-btn {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(201,168,76,0.15);
+    color: var(--gray-light);
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    font-weight: 300;
+    padding: 1.1rem 1.5rem;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    line-height: 1.4;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .option-btn::before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    min-width: 16px;
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 50%;
+    transition: all 0.2s;
+  }
+
+  .option-btn:hover {
+    border-color: rgba(201,168,76,0.5);
+    background: rgba(201,168,76,0.05);
+    color: var(--cream);
+    transform: translateX(4px);
+  }
+
+  .option-btn.selected {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.09);
+    color: var(--cream);
+  }
+
+  .option-btn.selected::before {
+    background: var(--gold);
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.2);
+  }
+
+  .step-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(201,168,76,0.1);
+  }
+
+  .btn-back {
+    background: none;
+    border: none;
+    color: var(--gray-mid);
+    font-family: var(--sans);
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .btn-back:hover { color: var(--gold); }
+  .btn-back:disabled { opacity: 0.2; cursor: default; }
+
+  .btn-next {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--navy);
+    border: none;
+    padding: 0.9rem 2.5rem;
+    font-family: var(--sans);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+  }
+
+  .btn-next:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(201,168,76,0.3); }
+  .btn-next:disabled { opacity: 0.3; cursor: default; transform: none; box-shadow: none; }
+
+  /* ── RESULTS ── */
+  #results {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1001;
+    background: var(--navy);
+    overflow-y: auto;
+  }
+
+  #results.active { display: block; }
+
+  .results-header-bar {
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent);
+  }
+
+  .results-tier-banner {
+    padding: 3rem 4rem;
+    text-align: center;
+  }
+
+  .tier-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    display: block;
+    opacity: 0.7;
+  }
+
+  .tier-name {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    font-weight: 300;
+    line-height: 1.1;
+  }
+
+  .tier-sub {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    font-style: italic;
+    margin-top: 0.5rem;
+    opacity: 0.75;
+  }
+
+  /* Tier colors */
+  .tier-optimized { background: linear-gradient(135deg, #0a2e1a, #0f4028); color: #7dd4a8; }
+  .tier-optimized .tier-label { color: #4cbb85; }
+  .tier-growing { background: linear-gradient(135deg, var(--gold-dim), #7a5a1a); color: var(--cream); }
+  .tier-growing .tier-label { color: var(--gold-light); }
+  .tier-chaos { background: linear-gradient(135deg, #3a0a0a, #5a1515); color: #f4b8b8; }
+  .tier-chaos .tier-label { color: #e07070; }
+
+  .results-body {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 4rem 3rem;
+  }
+
+  .score-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  .score-box {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(201,168,76,0.12);
+    padding: 1.5rem;
+    text-align: center;
+  }
+
+  .score-category {
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .score-val {
+    font-family: var(--serif);
+    font-size: 2.2rem;
+    font-weight: 300;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .score-denom {
+    font-size: 0.9rem;
+    color: var(--gray-mid);
+  }
+
+  .score-bar-wrap {
+    height: 2px;
+    background: rgba(201,168,76,0.1);
+    margin-top: 0.75rem;
+    border-radius: 1px;
+    overflow: hidden;
+  }
+
+  .score-bar-fill {
+    height: 100%;
+    border-radius: 1px;
+    transition: width 1s ease 0.3s;
+  }
+
+  .fill-low { background: var(--red); }
+  .fill-mid { background: var(--gold); }
+  .fill-high { background: var(--green); }
+
+  .tier-desc-block {
+    border-left: 3px solid var(--gold);
+    padding-left: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .tier-desc-tag {
+    font-size: 0.58rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .tier-desc-text {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: var(--cream);
+    line-height: 1.75;
+  }
+
+  .insights-heading {
+    font-size: 0.62rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 1.5rem;
+  }
+
+  .insights-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  .insight-item {
+    display: flex;
+    gap: 1.25rem;
+    padding: 1.5rem;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(201,168,76,0.08);
+  }
+
+  .insight-icon { color: var(--gold); font-family: var(--serif); font-size: 1.2rem; min-width: 20px; }
+
+  .insight-text {
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-weight: 300;
+    color: var(--gray-light);
+    line-height: 1.7;
+  }
+
+  .insight-text strong { color: var(--cream); font-weight: 400; }
+
+  .path-block {
+    background: #ffffff;
+    padding: 2.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .path-tag {
+    font-size: 0.58rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .path-headline {
+    font-family: var(--serif);
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: var(--navy);
+    margin-bottom: 0.75rem;
+  }
+
+  .path-desc {
+    font-family: var(--serif);
+    font-size: 0.95rem;
+    font-weight: 300;
+    color: #444;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+
+  .path-pricing {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--navy);
+    margin-bottom: 1.5rem;
+    padding: 0.75rem;
+    background: #f5f2ec;
+    border-left: 3px solid var(--gold);
+  }
+
+  .btn-schedule {
+    display: inline-block;
+    background: var(--navy);
+    color: var(--gold);
+    font-family: var(--sans);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 1rem 2.5rem;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+
+  .btn-schedule:hover { background: var(--navy-mid); }
+
+  .results-contact {
+    text-align: center;
+    padding: 2.5rem;
+    border-top: 1px solid rgba(201,168,76,0.12);
+  }
+
+  .rc-name {
+    font-family: var(--serif);
+    font-size: 1.4rem;
+    font-weight: 300;
+    color: var(--cream);
+    margin-bottom: 0.25rem;
+  }
+
+  .rc-creds {
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .rc-links {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .rc-link {
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(201,168,76,0.3);
+    padding-bottom: 2px;
+    transition: border-color 0.2s;
+  }
+
+  .rc-link:hover { border-color: var(--gold); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .hero-nav { padding: 1.5rem 2rem; }
+    .hero-pain { padding: 1.5rem 2rem; gap: 1rem; }
+    .problem-section, .solution-section, .value-section, .cred-section { padding: 4rem 2rem; }
+    .symptoms-grid { grid-template-columns: 1fr; }
+    .symptom { border-right: none; }
+    .solution-inner { grid-template-columns: 1fr; gap: 3rem; }
+    .value-grid { grid-template-columns: 1fr; }
+    .cred-inner { grid-template-columns: 1fr; gap: 3rem; }
+    .bridge-section { padding: 4rem 2rem; }
+    .assessment-header { padding: 1rem 1.5rem; }
+    .progress-wrap { display: none; }
+    .step { padding: 2.5rem 1.5rem; }
+    .contact-fields { grid-template-columns: 1fr; }
+    .score-grid { grid-template-columns: 1fr; }
+    .results-tier-banner { padding: 2.5rem 2rem; }
+    .results-body { padding: 2.5rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ LANDING PAGE ══ -->
+<div id="landing">
+
+  <section class="hero">
+    <div class="hero-rule"></div>
+    <nav class="hero-nav">
+      <div class="logo">
+        <span class="logo-addison">Addison</span>
+        <span class="logo-os">OS</span>
+      </div>
+      <div class="nav-tag">Business Operations System</div>
+    </nav>
+
+    <div class="hero-body">
+      <div class="hero-badge">
+        <div class="badge-dot"></div>
+        <span class="badge-text">Zoho One Certified Partner &nbsp;·&nbsp; AI-Powered Implementation</span>
+      </div>
+
+      <h1 class="hero-headline">
+        Your business runs on<br>
+        <span class="strike">spreadsheets and memory.</span><br>
+        <em>It's time for an OS.</em>
+      </h1>
+
+      <p class="hero-sub">
+        Growing businesses hit a ceiling when their systems can't keep up with their ambition. We replace the chaos with a connected, AI-powered operating system — built on Zoho One, deployed in 30 days.
+      </p>
+
+      <div class="hero-cta">
+        <button class="btn-primary" onclick="openAssessment()">Take the Free Operations Assessment</button>
+        <span class="cta-meta">3 minutes &nbsp;·&nbsp; Free &nbsp;·&nbsp; Immediate results</span>
+      </div>
+    </div>
+
+    <div class="hero-pain">
+      <div class="pain-item">
+        <span class="pain-icon">✕</span>
+        <span class="pain-text">CRM in Google Sheets</span>
+      </div>
+      <div class="pain-item">
+        <span class="pain-icon">✕</span>
+        <span class="pain-text">Tribal knowledge in people's heads</span>
+      </div>
+      <div class="pain-item">
+        <span class="pain-icon">✕</span>
+        <span class="pain-text">Books that don't close on time</span>
+      </div>
+      <div class="pain-item">
+        <span class="pain-icon">✕</span>
+        <span class="pain-text">No visibility into the pipeline</span>
+      </div>
+      <div class="pain-item">
+        <span class="pain-icon">✕</span>
+        <span class="pain-text">Owner in every decision</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section class="problem-section">
+    <div class="problem-inner">
+      <span class="section-label">The Ceiling Every Growing Business Hits</span>
+      <h2 class="problem-headline">Your systems worked at $2M. They're breaking at $10M.</h2>
+      <div class="symptoms-grid">
+        <div class="symptom">
+          <span class="symptom-number">01</span>
+          <div class="symptom-title">The owner is the system</div>
+          <p class="symptom-desc">Every important decision, relationship, and process lives in one person's head. When that person is unavailable, things stop.</p>
+        </div>
+        <div class="symptom">
+          <span class="symptom-number">02</span>
+          <div class="symptom-title">Data lives everywhere and nowhere</div>
+          <p class="symptom-desc">Customer info in spreadsheets. Financials in QuickBooks. Inventory in email threads. No one has the full picture at any given moment.</p>
+        </div>
+        <div class="symptom">
+          <span class="symptom-number">03</span>
+          <div class="symptom-title">Processes exist only if you ask the right person</div>
+          <p class="symptom-desc">Your team knows what to do — but none of it is documented. Training a new hire takes months. Mistakes repeat because no one wrote down the fix.</p>
+        </div>
+        <div class="symptom">
+          <span class="symptom-number">04</span>
+          <div class="symptom-title">Revenue is unpredictable</div>
+          <p class="symptom-desc">You can't forecast next quarter with confidence. The pipeline is a feeling, not a number. Cash flow surprises you — in both directions.</p>
+        </div>
+        <div class="symptom">
+          <span class="symptom-number">05</span>
+          <div class="symptom-title">Growth creates chaos instead of profit</div>
+          <p class="symptom-desc">More revenue means more complexity. More staff means more coordination. Scaling feels harder than it should because the foundation isn't built for it.</p>
+        </div>
+        <div class="symptom">
+          <span class="symptom-number">06</span>
+          <div class="symptom-title">You don't know what the business is worth</div>
+          <p class="symptom-desc">If you had to sell tomorrow — or step back — the business wouldn't run without you. That's not a business. That's a job you happen to own.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOLUTION -->
+  <section class="solution-section">
+    <div class="solution-inner">
+      <div class="solution-left">
+        <span class="section-label" style="color:var(--gold-dim);">The Addison OS Approach</span>
+        <h2 class="solution-headline">One connected system. Built in 30 days. Running without you.</h2>
+        <p class="solution-body">
+          Addison OS is a <strong>full business operating system deployment</strong> — built on Zoho One and powered by AI — that connects your CRM, your books, your inventory, your team, and your processes into one platform your business can run on without the owner in every decision.
+        </p>
+        <p class="solution-body">
+          We do not just install software. We map your operations, document your processes, build your AI-assisted workflows, and hand you a business that is measurably more valuable — and more sellable — than the one we found.
+        </p>
+        <div class="solution-zoho">
+          <span class="zoho-badge-text">✓ Zoho One Certified Partner &nbsp;·&nbsp; Two live deployments in production</span>
+        </div>
+        <p class="solution-body" style="font-style:italic;font-family:var(--serif);font-size:0.95rem;color:var(--gray-mid);">
+          Starting at $4,997 &nbsp;·&nbsp; Free 30-minute operations assessment
+        </p>
+      </div>
+
+      <div class="solution-right">
+        <div class="deliverables">
+          <div class="deliverable">
+            <div class="deliverable-icon">⚙</div>
+            <div class="deliverable-content">
+              <div class="deliverable-title">Zoho One Deployment</div>
+              <p class="deliverable-desc">CRM, Books, Inventory, Desk, and Marketing Automation configured for your specific business — not a generic template.</p>
+            </div>
+          </div>
+          <div class="deliverable">
+            <div class="deliverable-icon">📋</div>
+            <div class="deliverable-content">
+              <div class="deliverable-title">AI-Generated SOPs</div>
+              <p class="deliverable-desc">Every critical process documented automatically from your operational data. New hires onboard in days, not months.</p>
+            </div>
+          </div>
+          <div class="deliverable">
+            <div class="deliverable-icon">🤖</div>
+            <div class="deliverable-content">
+              <div class="deliverable-title">AI Workflow Automation</div>
+              <p class="deliverable-desc">Pricing intelligence, customer reactivation, pipeline forecasting, and reporting — running automatically without staff intervention.</p>
+            </div>
+          </div>
+          <div class="deliverable">
+            <div class="deliverable-icon">📊</div>
+            <div class="deliverable-content">
+              <div class="deliverable-title">Business Operating Dashboard</div>
+              <p class="deliverable-desc">A single view of revenue, pipeline, operations, and team performance. Your business at a glance, any time, from anywhere.</p>
+            </div>
+          </div>
+          <div class="deliverable">
+            <div class="deliverable-icon">📈</div>
+            <div class="deliverable-content">
+              <div class="deliverable-title">Valuation Impact Report</div>
+              <p class="deliverable-desc">A documented assessment of how the Addison OS deployment affects your business value — for your records, your bank, or your eventual buyer.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VALUE -->
+  <section class="value-section">
+    <div class="value-inner">
+      <span class="section-label">What Changes When You Have an OS</span>
+      <h2 class="value-headline">The business that runs without you is worth more than the one that needs you.</h2>
+      <div class="value-grid">
+        <div class="value-card">
+          <span class="value-before">BEFORE &nbsp;→&nbsp; Owner answers every question</span>
+          <span class="value-arrow">↓</span>
+          <span class="value-after">AFTER &nbsp;&nbsp;→&nbsp; Team runs from documented SOPs</span>
+          <div class="value-dim">Owner Dependency &nbsp;·&nbsp; $750K–$2.5M valuation impact</div>
+        </div>
+        <div class="value-card">
+          <span class="value-before">BEFORE &nbsp;→&nbsp; Pipeline is a feeling</span>
+          <span class="value-arrow">↓</span>
+          <span class="value-after">AFTER &nbsp;&nbsp;→&nbsp; Revenue forecast is a number</span>
+          <div class="value-dim">Revenue Predictability &nbsp;·&nbsp; $300K–$750K valuation impact</div>
+        </div>
+        <div class="value-card">
+          <span class="value-before">BEFORE &nbsp;→&nbsp; Books close in 3 weeks</span>
+          <span class="value-arrow">↓</span>
+          <span class="value-after">AFTER &nbsp;&nbsp;→&nbsp; Financials reconcile automatically</span>
+          <div class="value-dim">Financial Clarity &nbsp;·&nbsp; $400K–$1M valuation impact</div>
+        </div>
+        <div class="value-card">
+          <span class="value-before">BEFORE &nbsp;→&nbsp; Customer data in five places</span>
+          <span class="value-arrow">↓</span>
+          <span class="value-after">AFTER &nbsp;&nbsp;→&nbsp; One CRM, complete history, AI-scored</span>
+          <div class="value-dim">Revenue Transferability &nbsp;·&nbsp; $500K–$1.5M valuation impact</div>
+        </div>
+        <div class="value-card">
+          <span class="value-before">BEFORE &nbsp;→&nbsp; Growth creates chaos</span>
+          <span class="value-arrow">↓</span>
+          <span class="value-after">AFTER &nbsp;&nbsp;→&nbsp; Systems scale ahead of revenue</span>
+          <div class="value-dim">Growth Runway &nbsp;·&nbsp; $200K–$600K valuation impact</div>
+        </div>
+        <div class="value-card">
+          <span class="value-before">BEFORE &nbsp;→&nbsp; Dormant customers forgotten</span>
+          <span class="value-arrow">↓</span>
+          <span class="value-after">AFTER &nbsp;&nbsp;→&nbsp; AI reactivates them automatically</span>
+          <div class="value-dim">Competitive Position &nbsp;·&nbsp; $250K–$800K valuation impact</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CREDIBILITY -->
+  <section class="cred-section">
+    <div class="cred-inner">
+      <div>
+        <div class="cred-name">Thomas Addison</div>
+        <div class="cred-title">Founder, Addison Advisory &nbsp;·&nbsp; Zoho One Certified Partner</div>
+        <p class="cred-story">
+          I spent years inside <strong>Fortune 500 companies</strong> deploying enterprise technology at scale — working alongside CIOs, CFOs, and CEOs on systems that ran billion-dollar operations. Then I built and exited my own businesses, including acquiring and turning around a manufacturing company I now run without being in the building.
+        </p>
+        <p class="cred-story">
+          Addison OS is what I built for my own companies — <strong>Zoho One fully deployed, AI workflows running in production, SOPs generated automatically from real operational data</strong>. I am not selling a theory. I am selling the system I use every day.
+        </p>
+        <div class="cred-credentials">
+          <span class="cred-badge">CEPA</span>
+          <span class="cred-badge">CISSP</span>
+          <span class="cred-badge">Duke MBA</span>
+          <span class="cred-badge">MS Cybersecurity</span>
+          <span class="cred-badge">Zoho Partner</span>
+          <span class="cred-badge">SDVOSB</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="process-steps">
+          <div class="process-step">
+            <span class="step-num">01</span>
+            <div class="step-content">
+              <div class="step-title">Free Operations Assessment</div>
+              <p class="step-desc">30 minutes. We map your current systems, identify the gaps, and quantify what fixing them is worth to your business and your eventual exit.</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="step-num">02</span>
+            <div class="step-content">
+              <div class="step-title">Custom Deployment Plan</div>
+              <p class="step-desc">A scoped proposal with a fixed price, a 30-day timeline, and a clear picture of what your business looks like on the other side.</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="step-num">03</span>
+            <div class="step-content">
+              <div class="step-title">Build Your OS</div>
+              <p class="step-desc">Zoho One configured. Processes documented. AI workflows live. Dashboard built. Done in 30 days or we work until it is right.</p>
+            </div>
+          </div>
+          <div class="process-step">
+            <span class="step-num">04</span>
+            <div class="step-content">
+              <div class="step-title">Your Business Runs Without You</div>
+              <p class="step-desc">Training complete. Team onboarded. Systems running. And a Valuation Impact Report showing exactly what changed — and what it is worth.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BRIDGE CTA -->
+  <section class="bridge-section">
+    <div class="bridge-inner">
+      <h2 class="bridge-headline">Find out where your operations stand. Free. Three minutes.</h2>
+      <p class="bridge-sub">Eight questions. Immediate results. A clear picture of whether your systems are ready for what comes next.</p>
+      <button class="btn-dark" onclick="openAssessment()">Take the Free Assessment</button>
+    </div>
+  </section>
+
+</div><!-- end #landing -->
+
+
+<!-- ══ ASSESSMENT OVERLAY ══ -->
+<div id="assessment">
+  <div class="assessment-wrap">
+    <div class="assessment-header">
+      <div class="assessment-logo">
+        <span class="al-addison">Addison</span>
+        <span class="al-os">OS</span>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span id="progress-text">Getting started</span>
+          <span id="progress-pct">0%</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+        </div>
+      </div>
+      <button class="btn-close" onclick="closeAssessment()">✕ Close</button>
+    </div>
+    <!-- Steps injected by JS -->
+  </div>
+</div>
+
+
+<!-- ══ RESULTS OVERLAY ══ -->
+<div id="results">
+  <div>
+    <div class="results-header-bar"></div>
+    <div class="results-tier-banner" id="r-tier-banner">
+      <span class="tier-label" id="r-tier-label">Operations Assessment Results</span>
+      <div class="tier-name" id="r-tier-name"></div>
+      <div class="tier-sub" id="r-tier-sub"></div>
+    </div>
+    <div class="results-body">
+      <div class="score-grid" id="r-score-grid"></div>
+
+      <div class="tier-desc-block">
+        <span class="tier-desc-tag">What This Means</span>
+        <p class="tier-desc-text" id="r-tier-desc"></p>
+      </div>
+
+      <div class="insights-heading">Three Things Your Assessment Revealed</div>
+      <div class="insights-list" id="r-insights"></div>
+
+      <div class="path-block">
+        <span class="path-tag">Recommended Next Step</span>
+        <div class="path-headline" id="r-path-headline"></div>
+        <p class="path-desc" id="r-path-desc"></p>
+        <p class="path-pricing" id="r-path-pricing"></p>
+        <button class="btn-schedule" onclick="window.open('https://calendar.app.google/cYv64HLDdnt95R3W6','_blank')">
+          Schedule Free 30-Minute Assessment →
+        </button>
+      </div>
+
+      <div class="results-contact">
+        <div class="rc-name">Thomas Addison</div>
+        <div class="rc-creds">CEPA &nbsp;·&nbsp; CISSP &nbsp;·&nbsp; Duke MBA &nbsp;·&nbsp; Zoho Partner</div>
+        <div class="rc-links">
+          <a href="https://addisonsa.com" class="rc-link" target="_blank">addisonsa.com</a>
+          <a href="mailto:thomas@addisonsa.com" class="rc-link">thomas@addisonsa.com</a>
+          <a href="https://exitvault.app" class="rc-link" target="_blank">exitvault.app</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══ JAVASCRIPT ══ -->
+<script>
+const API_URL = 'https://exitvaultquiz-production.up.railway.app';
+
+const QUESTIONS = [
+  {
+    category: "People & Leadership · Question 1 of 3",
+    text: "If you disappeared for 30 days, how would your business perform?",
+    options: [
+      { label: "It would struggle significantly — key decisions and client relationships depend on me", score: 1, dim: "people" },
+      { label: "It would manage, but with notable gaps and some client concerns", score: 2, dim: "people" },
+      { label: "It would run smoothly — my team and systems handle day-to-day operations", score: 3, dim: "people" }
+    ]
+  },
+  {
+    category: "People & Leadership · Question 2 of 3",
+    text: "How are your core business processes documented?",
+    options: [
+      { label: "They live in people's heads — we train by watching and asking", score: 1, dim: "people" },
+      { label: "Some processes are written down but they are incomplete or outdated", score: 2, dim: "people" },
+      { label: "We have current SOPs for all critical processes that new hires can follow", score: 3, dim: "people" }
+    ]
+  },
+  {
+    category: "People & Leadership · Question 3 of 3",
+    text: "How long does it take to onboard a new team member to full productivity?",
+    options: [
+      { label: "Several months — there is too much tribal knowledge to absorb quickly", score: 1, dim: "people" },
+      { label: "Four to eight weeks with significant senior staff time required", score: 2, dim: "people" },
+      { label: "Two to three weeks — we have a structured onboarding system", score: 3, dim: "people" }
+    ]
+  },
+  {
+    category: "Systems & Technology · Question 1 of 3",
+    text: "Where does your customer and pipeline data live?",
+    options: [
+      { label: "Spreadsheets, email, and people's memory — there is no single source of truth", score: 1, dim: "systems" },
+      { label: "A CRM or system exists but it is inconsistently used and incomplete", score: 2, dim: "systems" },
+      { label: "A fully adopted CRM with complete history, pipeline, and forecasting", score: 3, dim: "systems" }
+    ]
+  },
+  {
+    category: "Systems & Technology · Question 2 of 3",
+    text: "How connected are your business systems — CRM, accounting, inventory, operations?",
+    options: [
+      { label: "Each system is separate — reconciling data requires manual work every time", score: 1, dim: "systems" },
+      { label: "Some integration exists but there are still significant manual handoffs", score: 2, dim: "systems" },
+      { label: "Systems are integrated — data flows automatically between platforms", score: 3, dim: "systems" }
+    ]
+  },
+  {
+    category: "Systems & Technology · Question 3 of 3",
+    text: "How do you currently use AI or automation in your business operations?",
+    options: [
+      { label: "We do not — everything is done manually by staff", score: 1, dim: "systems" },
+      { label: "We use basic tools like email filters or scheduling software", score: 2, dim: "systems" },
+      { label: "We have deployed AI or automation for pricing, reporting, or customer engagement", score: 3, dim: "systems" }
+    ]
+  },
+  {
+    category: "Finance & Growth · Question 1 of 2",
+    text: "How confident are you in your ability to forecast revenue 90 days out?",
+    options: [
+      { label: "Not confident — revenue is largely unpredictable month to month", score: 1, dim: "finance" },
+      { label: "Somewhat confident — I have a general sense but not a reliable system", score: 2, dim: "finance" },
+      { label: "Very confident — we have a documented pipeline and forecasting process", score: 3, dim: "finance" }
+    ]
+  },
+  {
+    category: "Finance & Growth · Question 2 of 2",
+    text: "If you decided to sell or step back from the business today, how ready would it be?",
+    options: [
+      { label: "Not ready at all — the business depends entirely on me and would not survive a transition", score: 1, dim: "finance" },
+      { label: "Partially ready — some systems exist but significant gaps would reduce value", score: 2, dim: "finance" },
+      { label: "Ready — the business has the systems, documentation, and team to operate independently", score: 3, dim: "finance" }
+    ]
+  }
+];
+
+const TIERS = {
+  chaos: {
+    name: "Operational Chaos",
+    sub: "Your systems are holding your growth hostage.",
+    bannerClass: "tier-chaos",
+    desc: "Your business is running on talent, hustle, and tribal knowledge — and it is working, until it is not. The ceiling you are feeling is real. The good news is that it is entirely a systems problem, and systems problems are entirely solvable. You do not have a bad business. You have a business that has outgrown its infrastructure.",
+    insights: [
+      { icon: "◆", text: "<strong>Owner dependency is your biggest risk.</strong> When the business cannot run without you, it cannot grow beyond you either. Every hour you spend in the business is an hour you cannot spend on it. And it means the business is worth far less than it should be — because a buyer is buying your job, not a business." },
+      { icon: "◆", text: "<strong>Your data is your biggest blind spot.</strong> You are making decisions based on incomplete information because your systems do not talk to each other. The pipeline is a feeling. The books close late. The inventory is a spreadsheet someone updates when they remember. That is not a data problem — it is a systems problem." },
+      { icon: "◆", text: "<strong>The cost of doing nothing is compounding.</strong> Every month without a real operating system is another month of decisions made on incomplete data, another month of onboarding that takes too long, another month of the owner answering questions that a documented process would eliminate. The system pays for itself in the first quarter." }
+    ],
+    pathHeadline: "Your business needs an OS. Let's build it.",
+    pathDesc: "A free 30-minute Operations Assessment with Thomas Addison will map exactly where your systems are breaking down, what fixing them is worth, and what a deployment would look like for your specific business.",
+    pathPricing: "Addison OS deployments start at $4,997 · 30-day timeline · Fixed price · Valuation Impact Report included"
+  },
+  growing: {
+    name: "Growing But Constrained",
+    sub: "You have built something real. Your systems need to catch up.",
+    bannerClass: "tier-growing",
+    desc: "You have done the hard part — you have a business that works. But you can feel the friction. Processes that worked at half this size are straining. The owner is still in too many decisions. Some systems exist but they are not connected. You are one or two gaps away from a business that runs like a machine instead of a managed scramble.",
+    insights: [
+      { icon: "◆", text: "<strong>You are closer than you think.</strong> The foundation exists. What is missing is integration — your systems need to talk to each other, your processes need to be documented, and your AI layer needs to be turned on. The gap between where you are and a fully operational business is smaller than it feels from inside the day-to-day." },
+      { icon: "◆", text: "<strong>The owner is still in too many decisions.</strong> Even with some systems in place, the owner is likely the final word on too many things. That is the primary constraint on both your growth and your eventual exit value. A documented decision framework and a connected CRM eliminate most of the escalations that land on your desk." },
+      { icon: "◆", text: "<strong>Your next level of growth requires your next level of infrastructure.</strong> What got you to $5M will not get you to $15M. The businesses that scale cleanly are the ones that built the systems infrastructure before they needed it — not after the wheels came off." }
+    ],
+    pathHeadline: "Close the gaps. Unlock the next level.",
+    pathDesc: "A free 30-minute Operations Assessment will identify exactly which two or three changes would have the highest impact on your operations and your business value — and what deploying them would cost and produce.",
+    pathPricing: "Addison OS deployments start at $4,997 · 30-day timeline · Fixed price · Valuation Impact Report included"
+  },
+  optimized: {
+    name: "Operationally Strong",
+    sub: "Your systems are working. Let's make sure they are working optimally.",
+    bannerClass: "tier-optimized",
+    desc: "You have built real operational infrastructure and it shows. Your business can run without you in the room for short periods, your data is reasonably clean, and your team has systems to work from. The question at your stage is not whether you have an OS — it is whether the OS you have is connected, AI-powered, and producing the valuation you deserve when the time comes to exit.",
+    insights: [
+      { icon: "◆", text: "<strong>Connection is the next frontier.</strong> Most operationally strong businesses have good individual systems that do not talk to each other. The ROI on integration is immediate — data flows automatically, reporting generates itself, and the manual reconciliation that consumes staff time disappears." },
+      { icon: "◆", text: "<strong>AI is the multiplier you have not turned on yet.</strong> Businesses at your operational level are the ideal candidates for AI-powered workflows — pricing intelligence, customer scoring, pipeline forecasting, SOP generation. You have the data. AI turns it into decisions." },
+      { icon: "◆", text: "<strong>Your operations are an asset. Make sure they are documented as one.</strong> When the time comes to exit, a buyer will pay a premium for a business with documented processes, integrated systems, and proven operational independence. The Valuation Impact Report we produce shows exactly what your OS is worth at the table." }
+    ],
+    pathHeadline: "Strong operations. Let's optimize and document them.",
+    pathDesc: "A free 30-minute Operations Assessment will identify the integration and AI opportunities that would increase both your operational efficiency and your eventual exit valuation.",
+    pathPricing: "Addison OS optimization engagements start at $4,997 · Valuation Impact Report included"
+  }
+};
+
+let currentStep = 0;
+let answers = new Array(QUESTIONS.length).fill(null);
+let scores = { people: [], systems: [], finance: [] };
+let totalSteps = QUESTIONS.length + 2; // 0=intro, 1-8=questions, 9=contact
+
+function buildSteps() {
+  const wrap = document.querySelector('.assessment-wrap');
+
+  // Step 0: Intro
+  const intro = document.createElement('div');
+  intro.className = 'step intro-step active';
+  intro.dataset.step = '0';
+  intro.innerHTML = `
+    <span class="step-eyebrow">Operations Readiness Assessment</span>
+    <h2 class="step-headline">Find out if your systems are ready for what comes next.</h2>
+    <p class="step-sub">Eight questions across people, systems, and finance. Honest answers get you an honest result — and a clear picture of where to focus.</p>
+    <div style="max-width:400px;margin:0 auto 2rem;">
+      <div class="field-group" style="margin-bottom:1.2rem;">
+        <label class="field-label">First Name</label>
+        <input class="field-input" type="text" id="f-first" placeholder="Thomas">
+      </div>
+      <div class="field-group" style="margin-bottom:1.2rem;">
+        <label class="field-label">Business Email</label>
+        <input class="field-input" type="email" id="f-email" placeholder="thomas@yourbusiness.com">
+      </div>
+      <div class="field-group">
+        <label class="field-label">Phone <span class="optional">(optional)</span></label>
+        <input class="field-input" type="tel" id="f-phone" placeholder="+1 (555) 000-0000">
+      </div>
+    </div>
+    <div id="intro-error" style="color:#e2c47a;font-family:var(--serif);font-size:0.9rem;font-style:italic;text-align:center;min-height:1.2rem;margin-bottom:0.5rem;"></div>
+    <div class="step-nav">
+      <button class="btn-back" disabled>← Back</button>
+      <button class="btn-next" onclick="startAssessment()">Begin Assessment →</button>
+    </div>`;
+  wrap.appendChild(intro);
+
+  // Questions
+  QUESTIONS.forEach((q, i) => {
+    const step = document.createElement('div');
+    step.className = 'step';
+    step.dataset.step = i + 1;
+    const opts = q.options.map((o, oi) =>
+      `<button class="option-btn" onclick="selectAnswer(${i},${oi},this)">${o.label}</button>`
+    ).join('');
+    step.innerHTML = `
+      <span class="q-category">${q.category}</span>
+      <div class="q-number">0${i+1}</div>
+      <h3 class="q-text">${q.text}</h3>
+      <div class="options-list">${opts}</div>
+      <div class="step-nav">
+        <button class="btn-back" onclick="goBack()">← Back</button>
+        <button class="btn-next" id="next-${i+1}" disabled onclick="goNext()">Next →</button>
+      </div>`;
+    wrap.appendChild(step);
+  });
+}
+
+function openAssessment() {
+  document.getElementById('assessment').classList.add('active');
+  document.body.style.overflow = 'hidden';
+  showStep(0);
+}
+
+function closeAssessment() {
+  document.getElementById('assessment').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function showStep(n) {
+  document.querySelectorAll('#assessment .step').forEach(s => s.classList.remove('active'));
+  const t = document.querySelector(`#assessment .step[data-step="${n}"]`);
+  if (t) { t.classList.add('active'); t.scrollIntoView({ behavior: 'instant', block: 'start' }); }
+  currentStep = n;
+  updateProgress();
+}
+
+function goNext() { if (currentStep < QUESTIONS.length) showStep(currentStep + 1); }
+function goBack() { if (currentStep > 0) showStep(currentStep - 1); }
+
+function updateProgress() {
+  const pct = Math.round((currentStep / QUESTIONS.length) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-pct').textContent = pct + '%';
+  const labels = ['Getting started','People & Leadership','Systems & Technology','Finance & Growth'];
+  let label = labels[0];
+  if (currentStep >= 1 && currentStep <= 3) label = labels[1];
+  else if (currentStep >= 4 && currentStep <= 6) label = labels[2];
+  else if (currentStep >= 7) label = labels[3];
+  document.getElementById('progress-text').textContent = label;
+}
+
+function startAssessment() {
+  const first = document.getElementById('f-first').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  const err = document.getElementById('intro-error');
+  err.textContent = '';
+  if (!first || !email) { err.textContent = 'Please enter your first name and email to continue.'; return; }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) { err.textContent = 'Please enter a valid email address.'; return; }
+  goNext();
+}
+
+function selectAnswer(qIndex, optIndex, btn) {
+  const stepEl = document.querySelector(`#assessment .step[data-step="${qIndex + 1}"]`);
+  stepEl.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  answers[qIndex] = { score: QUESTIONS[qIndex].options[optIndex].score, dim: QUESTIONS[qIndex].options[optIndex].dim };
+  document.getElementById(`next-${qIndex + 1}`).disabled = false;
+  if (qIndex === QUESTIONS.length - 1) {
+    setTimeout(() => showResults(), 400);
+  }
+}
+
+function calcTier() {
+  const dimScores = { people: 0, systems: 0, finance: 0 };
+  const dimCounts = { people: 0, systems: 0, finance: 0 };
+  answers.forEach(a => {
+    if (a) { dimScores[a.dim] += a.score; dimCounts[a.dim]++; }
+  });
+  const total = Object.values(dimScores).reduce((a,b) => a+b, 0);
+  const max = QUESTIONS.length * 3;
+  const pct = total / max;
+  const tier = pct >= 0.78 ? 'optimized' : pct >= 0.5 ? 'growing' : 'chaos';
+  return { tier, dimScores, dimCounts, total, max };
+}
+
+async function showResults() {
+  const { tier, dimScores, dimCounts } = calcTier();
+  const td = TIERS[tier];
+  const firstName = document.getElementById('f-first').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  const phone = document.getElementById('f-phone').value.trim();
+
+  // Tier banner
+  const banner = document.getElementById('r-tier-banner');
+  banner.className = 'results-tier-banner ' + td.bannerClass;
+  document.getElementById('r-tier-label').textContent = firstName ? `${firstName}'s Results` : 'Your Results';
+  document.getElementById('r-tier-name').textContent = td.name;
+  document.getElementById('r-tier-sub').textContent = td.sub;
+
+  // Score grid
+  const scoreGrid = document.getElementById('r-score-grid');
+  const dims = [
+    { key: 'people', label: 'People & Leadership', max: 9 },
+    { key: 'systems', label: 'Systems & Technology', max: 9 },
+    { key: 'finance', label: 'Finance & Growth', max: 6 }
+  ];
+
+  scoreGrid.innerHTML = dims.map(d => {
+    const s = dimScores[d.key];
+    const pct = Math.round((s / d.max) * 100);
+    const fillClass = pct >= 75 ? 'fill-high' : pct >= 45 ? 'fill-mid' : 'fill-low';
+    return `<div class="score-box">
+      <span class="score-category">${d.label}</span>
+      <div class="score-val">${s}<span class="score-denom"> / ${d.max}</span></div>
+      <div class="score-bar-wrap"><div class="score-bar-fill ${fillClass}" style="width:0%" data-w="${pct}%"></div></div>
+    </div>`;
+  }).join('');
+
+  setTimeout(() => {
+    document.querySelectorAll('.score-bar-fill').forEach(el => {
+      el.style.width = el.dataset.w;
+    });
+  }, 200);
+
+  document.getElementById('r-tier-desc').textContent = td.desc;
+
+  const insightsList = document.getElementById('r-insights');
+  insightsList.innerHTML = td.insights.map(ins =>
+    `<div class="insight-item"><span class="insight-icon">${ins.icon}</span><p class="insight-text">${ins.text}</p></div>`
+  ).join('');
+
+  document.getElementById('r-path-headline').textContent = td.pathHeadline;
+  document.getElementById('r-path-desc').textContent = td.pathDesc;
+  document.getElementById('r-path-pricing').textContent = td.pathPricing;
+
+  document.getElementById('assessment').classList.remove('active');
+  document.getElementById('results').classList.add('active');
+  document.getElementById('results').scrollTop = 0;
+
+  // Submit to API silently
+  try {
+    await fetch(`${API_URL}/api/submit-results`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        firstName,
+        lastName: '',
+        email,
+        phone,
+        personalScore: dimScores.people + dimScores.systems,
+        financialScore: dimScores.finance,
+        quadrant: tier === 'optimized' ? 'Q4' : tier === 'growing' ? 'Q2' : 'Q1',
+        situationalAnswers: [`Addison OS Assessment — Tier: ${td.name}`],
+        openText: `People: ${dimScores.people}/9 · Systems: ${dimScores.systems}/9 · Finance: ${dimScores.finance}/6`
+      })
+    });
+  } catch(e) { console.warn('Submission failed silently:', e); }
+}
+
+buildSteps();
+</script>
+</body>
+</html>
